@@ -125,6 +125,28 @@ bun run skill:check      # health dashboard for all skills
   helper resolves state roots through `CLAUDE_PLUGIN_DATA` / `GSTACK_HOME` so plugin
   installs work on every platform.
 
+## Cloud Agent environment
+
+Cloud Agents install Bun 1.3.10 onto `/usr/local/bin` (login shells do not
+reliably load `~/.bashrc`), then run `bun install --frozen-lockfile`.
+`bun install` does not download a browser. Browse and the free browser tests
+need Playwright's Chromium: `bunx playwright install chromium`.
+
+Host skill copies under `.agents/`, `.factory/`, and the other host directories
+are gitignored. Regenerate them with `bun run gen:skill-docs --host all` before
+the golden-file tests. The Claude Code CLI (`claude`) is what
+`scripts/host-config-export.ts detect` expects on `PATH`.
+
+Day-to-day checks from this checkout:
+
+```bash
+bun test                              # free suite, no API key
+bun run skill:check                   # skill health dashboard
+bun run dev goto https://example.com  # headless browse smoke test
+```
+
+`bun run test:evals` needs `ANTHROPIC_API_KEY` and is not part of environment setup.
+
 ## Key conventions
 
 - SKILL.md files are **generated** from `.tmpl` templates. Edit the template, not the output.
